@@ -254,6 +254,7 @@ const DashboardPage = () => {
                 <TableHead>NIK</TableHead>
                 <TableHead>Nama</TableHead>
                 <TableHead>Jabatan</TableHead>
+                <TableHead>Gaji</TableHead>
                 <TableHead>Created At</TableHead>
                 <TableHead>Updated At</TableHead>
                 <TableHead>Created By</TableHead>
@@ -281,6 +282,9 @@ const DashboardPage = () => {
                     <TableCell className="font-medium">{emp.nik}</TableCell>
                     <TableCell>{emp.nama}</TableCell>
                     <TableCell>{emp.jabatan}</TableCell>
+                    <TableCell>
+                      Rp {(emp.gaji || 0).toLocaleString("id-ID")}
+                    </TableCell>
                     <TableCell>
                       {new Date(emp.createdAt).toLocaleDateString("id-ID")}
                     </TableCell>
@@ -345,12 +349,17 @@ const DashboardPage = () => {
 
             <TableFooter>
               <TableRow>
-                <TableCell colSpan={7}>Total</TableCell>
+                <TableCell colSpan={8}>Total</TableCell>{" "}
+                {/* ← UBAH DARI 7 JADI 8 */}
                 <TableCell className="text-right">
                   {employees.length} Data
                 </TableCell>
               </TableRow>
             </TableFooter>
+            <TableCell colSpan={9} className="text-center">
+              {" "}
+              Loading data... / Data tidak ditemukan
+            </TableCell>
           </Table>
         </div>
       </div>

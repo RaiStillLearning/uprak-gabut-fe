@@ -28,6 +28,7 @@ const AddEmployeePage = () => {
   });
   const [showCustomJabatan, setShowCustomJabatan] = useState(false);
   const [customJabatan, setCustomJabatan] = useState("");
+  const [gajiDisplay, setGajiDisplay] = useState(""); // ← TAMBAH: untuk display formatted
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -50,6 +51,25 @@ const AddEmployeePage = () => {
     const value = e.target.value;
     setCustomJabatan(value);
     setForm({ ...form, jabatan: value });
+  };
+
+  // ✅ TAMBAH FUNCTION INI: Format input gaji dengan pemisah ribuan
+  const handleGajiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    // Hapus semua karakter non-digit
+    const numericValue = value.replace(/\D/g, "");
+
+    // Update state dengan nilai numerik asli (untuk dikirim ke backend)
+    setForm({ ...form, gaji: numericValue });
+
+    // Format untuk display dengan pemisah ribuan
+    if (numericValue === "") {
+      setGajiDisplay("");
+    } else {
+      const formatted = Number(numericValue).toLocaleString("id-ID");
+      setGajiDisplay(formatted);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -76,7 +96,6 @@ const AddEmployeePage = () => {
 
       const data = await res.json();
 
-      // ❌ Jika NIK duplikat / error backend
       if (!res.ok) {
         alert(`❌ ${data.message || "Gagal menambahkan data"}`);
         setLoading(false);
@@ -84,7 +103,7 @@ const AddEmployeePage = () => {
       }
 
       alert("✅ Employee berhasil ditambahkan");
-      router.push("/dashboard"); // ✅ AUTO REDIRECT
+      router.push("/dashboard");
     } catch (error) {
       alert("❌ Gagal terhubung ke server");
     } finally {
@@ -146,7 +165,6 @@ const AddEmployeePage = () => {
                   </SelectContent>
                 </Select>
 
-                {/* Input Custom Jabatan */}
                 {showCustomJabatan && (
                   <div className="mt-2 animate-in fade-in slide-in-from-top-2 duration-200">
                     <Input
@@ -160,17 +178,28 @@ const AddEmployeePage = () => {
                 )}
               </div>
 
-              {/* GAJI */}
+              {/* GAJI - ✅ UPDATE BAGIAN INI */}
               <div className="space-y-2">
-                <Label htmlFor="gaji">Gaji</Label>
-                <Input
-                  id="gaji"
-                  name="gaji"
-                  type="number"
-                  placeholder="Masukkan gaji"
-                  value={form.gaji}
-                  onChange={handleChange}
-                />
+                <Label htmlFor="gaji">Gaji (IDR)</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    Rp
+                  </span>
+                  <Input
+                    id="gaji"
+                    name="gaji"
+                    type="text"
+                    placeholder="10.000"
+                    value={gajiDisplay}
+                    onChange={handleGajiChange}
+                    className="pl-10"
+                  />
+                </div>
+                {gajiDisplay && (
+                  <p className="text-xs text-muted-foreground">
+                    Rp {gajiDisplay}
+                  </p>
+                )}
               </div>
 
               {/* ACTION BUTTON */}
