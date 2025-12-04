@@ -13,8 +13,8 @@ import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
 // ✅ Pakai ID, bukan href
 const navItems = [
-  { name: "Employee Data", id: "employeedata" },
-  { name: "Employee Form", id: "employeeform" },
+  { name: "Employee Data", id: "/dashboard" },
+  { name: "Employee Form", id: "/dashboard/add-employee" },
 
 ];
 

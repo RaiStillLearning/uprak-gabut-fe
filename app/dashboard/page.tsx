@@ -25,6 +25,8 @@ type Employee = {
   updatedBy: string
 }
 
+import Link from "next/link"
+
 const API_URL = "http://localhost:5000/api/employees"
 
 const DashboardPage = () => {
@@ -218,9 +220,16 @@ const handlePrintById = async (id: string) => {
             <Button variant="secondary" onClick={handleAdd}>
               Print
             </Button>
-            <Button variant="secondary" onClick={handleAdd}>
-              + Add Employee
-            </Button>
+            <div className="flex flex-wrap gap-2">
+
+  {/* ✅ LINK KE HALAMAN ADD - BENAR */}
+  <Button asChild variant="secondary">
+    <Link href="/dashboard/add-employee">
+      + Add Employee
+    </Link>
+  </Button>
+
+</div>
           </div>
         </div>
 
