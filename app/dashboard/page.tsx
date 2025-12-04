@@ -80,28 +80,49 @@ const DashboardPage = () => {
   };
 
   // ================= EDIT =================
+  // ================= EDIT =================
   const handleEdit = async (emp: Employee) => {
     const nama = prompt("Edit Nama:", emp.nama);
     const jabatan = prompt("Edit Jabatan:", emp.jabatan);
+    const gajiInput = prompt("Edit Gaji:", emp.gaji?.toString() || "");
 
-    if (!nama || !jabatan) return;
+    if (!nama || !jabatan || !gajiInput) {
+      alert("❌ Semua field wajib diisi");
+      return;
+    }
+
+    const gaji = Number(gajiInput);
+
+    if (isNaN(gaji)) {
+      alert("❌ Gaji harus berupa angka");
+      return;
+    }
 
     try {
-      await fetch(`${API_URL}/${emp._id}`, {
+      const res = await fetch(`${API_URL}/${emp._id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+        },
         body: JSON.stringify({
           nama,
           jabatan,
+          gaji,
           updatedBy: "admin",
         }),
       });
 
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
+
       alert("✅ Data berhasil diupdate");
       fetchEmployees();
     } catch (err) {
-      alert("❌ Gagal update data");
-      console.log(err);
+      console.error(err);
+      alert(err instanceof Error ? err.message : "❌ Gagal update data");
     }
   };
 
