@@ -31,9 +31,28 @@ const AddEmployeePage = () => {
     jabatan: "",
     gaji: "",
   })
+  const [showCustomJabatan, setShowCustomJabatan] = useState(false)
+  const [customJabatan, setCustomJabatan] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  const handleJabatanChange = (value: string) => {
+    if (value === "Other") {
+      setShowCustomJabatan(true)
+      setForm({ ...form, jabatan: "" })
+    } else {
+      setShowCustomJabatan(false)
+      setCustomJabatan("")
+      setForm({ ...form, jabatan: value })
+    }
+  }
+
+  const handleCustomJabatanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setCustomJabatan(value)
+    setForm({ ...form, jabatan: value })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -118,11 +137,7 @@ const AddEmployeePage = () => {
               {/* JABATAN */}
               <div className="space-y-2">
                 <Label>Jabatan</Label>
-                <Select
-                  onValueChange={(value) =>
-                    setForm({ ...form, jabatan: value })
-                  }
-                >
+                <Select onValueChange={handleJabatanChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="Pilih Jabatan" />
                   </SelectTrigger>
@@ -131,8 +146,22 @@ const AddEmployeePage = () => {
                     <SelectItem value="HRD">HRD</SelectItem>
                     <SelectItem value="Staff">Staff</SelectItem>
                     <SelectItem value="Admin">Admin</SelectItem>
+                    <SelectItem value="Other">Lainnya (Tulis Sendiri)</SelectItem>
                   </SelectContent>
                 </Select>
+
+                {/* Input Custom Jabatan */}
+                {showCustomJabatan && (
+                  <div className="mt-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <Input
+                      placeholder="Tulis jabatan..."
+                      value={customJabatan}
+                      onChange={handleCustomJabatanChange}
+                      required
+                      className="border-blue-500 focus-visible:ring-blue-500"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* GAJI */}
