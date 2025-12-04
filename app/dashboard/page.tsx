@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -12,9 +12,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,66 +25,66 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 type Employee = {
-  _id: string
-  nik: string
-  nama: string
-  jabatan: string
-  gaji?: number
-  createdAt: string
-  updatedAt: string
-  createdBy: string
-  updatedBy: string
-}
+  _id: string;
+  nik: string;
+  nama: string;
+  jabatan: string;
+  gaji?: number;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  updatedBy: string;
+};
 
-const API_URL = "http://localhost:5000/api/employees"
+const API_URL = "https://uprak-gabut-be.vercel.app/api/employees";
 
 const DashboardPage = () => {
-  const router = useRouter()
-  const [employees, setEmployees] = useState<Employee[]>([])
-  const [search, setSearch] = useState("")
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // ================= FETCH =================
   const fetchEmployees = async (keyword = "") => {
     try {
-      setLoading(true)
-      const res = await fetch(`${API_URL}?search=${keyword}`)
-      const data = await res.json()
-      setEmployees(data.data || [])
+      setLoading(true);
+      const res = await fetch(`${API_URL}?search=${keyword}`);
+      const data = await res.json();
+      setEmployees(data.data || []);
     } catch (error) {
-      console.error("Gagal ambil data:", error)
+      console.error("Gagal ambil data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchEmployees()
-  }, [])
+    fetchEmployees();
+  }, []);
 
   useEffect(() => {
     const delay = setTimeout(() => {
-      fetchEmployees(search)
-    }, 400)
-    return () => clearTimeout(delay)
-  }, [search])
+      fetchEmployees(search);
+    }, 400);
+    return () => clearTimeout(delay);
+  }, [search]);
 
   // ================= LOGOUT =================
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    router.push("/login")
-  }
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    router.push("/login");
+  };
 
   // ================= EDIT =================
   const handleEdit = async (emp: Employee) => {
-    const nama = prompt("Edit Nama:", emp.nama)
-    const jabatan = prompt("Edit Jabatan:", emp.jabatan)
+    const nama = prompt("Edit Nama:", emp.nama);
+    const jabatan = prompt("Edit Jabatan:", emp.jabatan);
 
-    if (!nama || !jabatan) return
+    if (!nama || !jabatan) return;
 
     try {
       await fetch(`${API_URL}/${emp._id}`, {
@@ -95,38 +95,38 @@ const DashboardPage = () => {
           jabatan,
           updatedBy: "admin",
         }),
-      })
+      });
 
-      alert("✅ Data berhasil diupdate")
-      fetchEmployees()
+      alert("✅ Data berhasil diupdate");
+      fetchEmployees();
     } catch (err) {
-      alert("❌ Gagal update data")
+      alert("❌ Gagal update data");
     }
-  }
+  };
 
   // ================= DELETE =================
   const handleDelete = async (id: string) => {
     try {
       await fetch(`${API_URL}/${id}`, {
         method: "DELETE",
-      })
+      });
 
-      alert("✅ Data berhasil dihapus")
-      fetchEmployees()
+      alert("✅ Data berhasil dihapus");
+      fetchEmployees();
     } catch (err) {
-      alert("❌ Gagal menghapus data")
+      alert("❌ Gagal menghapus data");
     }
-  }
+  };
 
   // ================= PRINT BY ID =================
   const handlePrintById = async (id: string) => {
     try {
-      const res = await fetch(`${API_URL}/${id}`)
-      const emp = await res.json()
+      const res = await fetch(`${API_URL}/${id}`);
+      const emp = await res.json();
 
-      const printWindow = window.open("", "_blank", "width=800,height=600")
+      const printWindow = window.open("", "_blank", "width=800,height=600");
 
-      if (!printWindow) return
+      if (!printWindow) return;
 
       printWindow.document.write(`
         <html>
@@ -149,15 +149,25 @@ const DashboardPage = () => {
               <tr><td class="label">NIK</td><td>${emp.nik}</td></tr>
               <tr><td class="label">Nama</td><td>${emp.nama}</td></tr>
               <tr><td class="label">Jabatan</td><td>${emp.jabatan}</td></tr>
-              <tr><td class="label">Gaji</td><td>Rp ${emp.gaji?.toLocaleString('id-ID') || 0}</td></tr>
-              <tr><td class="label">Created At</td><td>${new Date(emp.createdAt).toLocaleString('id-ID')}</td></tr>
-              <tr><td class="label">Updated At</td><td>${new Date(emp.updatedAt).toLocaleString('id-ID')}</td></tr>
-              <tr><td class="label">Created By</td><td>${emp.createdBy}</td></tr>
-              <tr><td class="label">Updated By</td><td>${emp.updatedBy}</td></tr>
+              <tr><td class="label">Gaji</td><td>Rp ${
+                emp.gaji?.toLocaleString("id-ID") || 0
+              }</td></tr>
+              <tr><td class="label">Created At</td><td>${new Date(
+                emp.createdAt
+              ).toLocaleString("id-ID")}</td></tr>
+              <tr><td class="label">Updated At</td><td>${new Date(
+                emp.updatedAt
+              ).toLocaleString("id-ID")}</td></tr>
+              <tr><td class="label">Created By</td><td>${
+                emp.createdBy
+              }</td></tr>
+              <tr><td class="label">Updated By</td><td>${
+                emp.updatedBy
+              }</td></tr>
             </table>
 
             <div class="ttd">
-              <p>Jakarta, ${new Date().toLocaleDateString('id-ID')}</p>
+              <p>Jakarta, ${new Date().toLocaleDateString("id-ID")}</p>
               <br><br><br>
               <p>_______________________</p>
               <p>Tanda Tangan</p>
@@ -173,22 +183,20 @@ const DashboardPage = () => {
             </script>
           </body>
         </html>
-      `)
+      `);
 
-      printWindow.document.close()
+      printWindow.document.close();
     } catch (error) {
-      alert("❌ Gagal print data")
-      console.error(error)
+      alert("❌ Gagal print data");
+      console.error(error);
     }
-  }
+  };
 
   return (
     <section className="min-h-screen w-full px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-
         {/* ================= HEADER ================= */}
         <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-
           <div className="w-full md:w-auto">
             <h1 className="text-2xl font-bold">Employee Data Overview</h1>
             <p className="mb-3 text-sm text-muted-foreground">
@@ -208,25 +216,23 @@ const DashboardPage = () => {
 
           <div className="flex flex-wrap gap-2">
             <Button asChild variant="secondary">
-              <Link href="/dashboard/add-employee">
-                + Add Employee
-              </Link>
+              <Link href="/dashboard/add-employee">+ Add Employee</Link>
             </Button>
-            
+
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">Logout</Button>
               </AlertDialogTrigger>
-              
+
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Konfirmasi Logout</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Apakah Anda yakin ingin keluar dari akun ini? 
-                    Anda perlu login kembali untuk mengakses dashboard.
+                    Apakah Anda yakin ingin keluar dari akun ini? Anda perlu
+                    login kembali untuk mengakses dashboard.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                
+
                 <AlertDialogFooter>
                   <AlertDialogCancel>Batal</AlertDialogCancel>
                   <AlertDialogAction onClick={handleLogout}>
@@ -276,10 +282,10 @@ const DashboardPage = () => {
                     <TableCell>{emp.nama}</TableCell>
                     <TableCell>{emp.jabatan}</TableCell>
                     <TableCell>
-                      {new Date(emp.createdAt).toLocaleDateString('id-ID')}
+                      {new Date(emp.createdAt).toLocaleDateString("id-ID")}
                     </TableCell>
                     <TableCell>
-                      {new Date(emp.updatedAt).toLocaleDateString('id-ID')}
+                      {new Date(emp.updatedAt).toLocaleDateString("id-ID")}
                     </TableCell>
                     <TableCell>{emp.createdBy}</TableCell>
                     <TableCell>{emp.updatedBy}</TableCell>
@@ -299,19 +305,24 @@ const DashboardPage = () => {
                               Delete
                             </Button>
                           </AlertDialogTrigger>
-                          
+
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Konfirmasi Hapus</AlertDialogTitle>
+                              <AlertDialogTitle>
+                                Konfirmasi Hapus
+                              </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Apakah Anda yakin ingin menghapus data <strong>{emp.nama}</strong>? 
-                                Tindakan ini tidak dapat dibatalkan.
+                                Apakah Anda yakin ingin menghapus data{" "}
+                                <strong>{emp.nama}</strong>? Tindakan ini tidak
+                                dapat dibatalkan.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
-                            
+
                             <AlertDialogFooter>
                               <AlertDialogCancel>Batal</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDelete(emp._id)}>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(emp._id)}
+                              >
                                 Ya, Hapus
                               </AlertDialogAction>
                             </AlertDialogFooter>
@@ -342,10 +353,9 @@ const DashboardPage = () => {
             </TableFooter>
           </Table>
         </div>
-
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default DashboardPage
+export default DashboardPage;
