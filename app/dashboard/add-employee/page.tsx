@@ -106,6 +106,7 @@ const AddEmployeePage = () => {
       router.push("/dashboard");
     } catch (error) {
       alert("❌ Gagal terhubung ke server");
+      console.log(error);
     } finally {
       setLoading(false);
     }

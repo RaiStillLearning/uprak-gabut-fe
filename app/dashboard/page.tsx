@@ -101,6 +101,7 @@ const DashboardPage = () => {
       fetchEmployees();
     } catch (err) {
       alert("❌ Gagal update data");
+      console.log(err);
     }
   };
 
@@ -115,6 +116,7 @@ const DashboardPage = () => {
       fetchEmployees();
     } catch (err) {
       alert("❌ Gagal menghapus data");
+      console.log(err);
     }
   };
 
@@ -356,10 +358,6 @@ const DashboardPage = () => {
                 </TableCell>
               </TableRow>
             </TableFooter>
-            <TableCell colSpan={9} className="text-center">
-              {" "}
-              Loading data... / Data tidak ditemukan
-            </TableCell>
           </Table>
         </div>
       </div>
