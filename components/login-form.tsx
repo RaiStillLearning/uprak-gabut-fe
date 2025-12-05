@@ -22,38 +22,39 @@ export function LoginForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Dummy akun login
-  const dummyUser = {
-    email: "admin@gmail.com",
-    password: "admin",
-  };
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    setTimeout(() => {
-      if (email === dummyUser.email && password === dummyUser.password) {
-        alert("Login berhasil!");
+    try {
+      const res = await fetch("https://uprak-gabut-be.vercel.app/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
-        // Simpan dummy session
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            email,
-            role: "admin",
-          })
-        );
+      const data = await res.json();
 
-        // Redirect ke dashboard (ubah sesuai kebutuhan)
-        window.location.href = "/dashboard";
-      } else {
-        setError("Email atau password salah");
+      if (!res.ok) {
+        setError(data.message);
+        setLoading(false);
+        return;
       }
 
+      localStorage.setItem("user", JSON.stringify(data.user));
+      alert("Login berhasil!");
+      window.location.href = "/dashboard";
+    } catch (err) {
+      setError("Gagal terhubung ke server");
+    } finally {
       setLoading(false);
-    }, 1000); // simulasi loading 1 detik
+    }
   };
 
   return (
@@ -62,7 +63,7 @@ export function LoginForm({
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
-            Gunakan akun dummy untuk masuk ke sistem
+            Gunakan akun yang sudah terdaftar
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -81,9 +82,7 @@ export function LoginForm({
               </Field>
 
               <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                </div>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
                 <Input
                   id="password"
                   type="password"
@@ -100,6 +99,7 @@ export function LoginForm({
                   {loading ? "Logging in..." : "Login"}
                 </Button>
               </Field>
+
               <a href="/login/register" className="text-blue-500">
                 Request Register
               </a>
