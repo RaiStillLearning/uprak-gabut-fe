@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 
-const API_URL = "http://localhost:5000/api/employees"
+const API_URL = "https://uprak-gabut-be.vercel.app/api/employees"
 
 const AddEmployeePage = () => {
   const router = useRouter()

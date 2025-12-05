@@ -38,7 +38,7 @@ type Employee = {
   updatedBy: string
 }
 
-const API_URL = "http://localhost:5000/api/employees"
+const API_URL = "https://uprak-gabut-be.vercel.app/api/employees"
 
 // Warna biru shadcn yang konsisten
 const BLUE_COLORS = [
