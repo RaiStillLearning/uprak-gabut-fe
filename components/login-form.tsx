@@ -28,7 +28,7 @@ export function LoginForm({
     setError("");
 
     try {
-      const res = await fetch("https://uprak-gabut-be.vercel.app/api/login", {
+      const res = await fetch("https://uprak-gabut-be.vercel.app/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
