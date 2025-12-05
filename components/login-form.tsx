@@ -1,61 +1,60 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/card";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   // ✅ Dummy akun login
   const dummyUser = {
     email: "admin@gmail.com",
     password: "admin",
-  }
+  };
 
   const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
     setTimeout(() => {
       if (email === dummyUser.email && password === dummyUser.password) {
-        alert("Login berhasil!")
+        alert("Login berhasil!");
 
         // Simpan dummy session
-        localStorage.setItem("user", JSON.stringify({
-          email,
-          role: "admin"
-        }))
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            email,
+            role: "admin",
+          })
+        );
 
         // Redirect ke dashboard (ubah sesuai kebutuhan)
-        window.location.href = "/dashboard"
+        window.location.href = "/dashboard";
       } else {
-        setError("Email atau password salah")
+        setError("Email atau password salah");
       }
 
-      setLoading(false)
-    }, 1000) // simulasi loading 1 detik
-  }
+      setLoading(false);
+    }, 1000); // simulasi loading 1 detik
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -94,25 +93,20 @@ export function LoginForm({
                 />
               </Field>
 
-              {error && (
-                <p className="text-sm text-red-500">{error}</p>
-              )}
+              {error && <p className="text-sm text-red-500">{error}</p>}
 
               <Field>
                 <Button type="submit" disabled={loading}>
                   {loading ? "Logging in..." : "Login"}
                 </Button>
               </Field>
-
-              <p className="text-xs text-muted-foreground">
-                Dummy Login: <br />
-                Email: <b>admin@gmail.com</b> <br />
-                Password: <b>123456</b>
-              </p>
+              <a href="/login/register" className="text-blue-500">
+                Request Register
+              </a>
             </FieldGroup>
           </form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
