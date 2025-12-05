@@ -190,7 +190,7 @@ const DashboardPage = () => {
             </table>
 
             <div class="ttd">
-              <p>Mampng sonoan lagi, ${new Date().toLocaleDateString(
+              <p>Mampang sonoan lagi, ${new Date().toLocaleDateString(
                 "id-ID"
               )}</p>
               <br><br><br>
